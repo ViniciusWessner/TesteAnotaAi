@@ -3,7 +3,7 @@ kind: Kustomization
 
 helmCharts:
 - name: worker
-  version: 1.0.1
+  version: 2.2.1
   repo: http://chartmuseum-private.chartmuseum-private.svc.cluster.local:8080/
   valuesFile: values.yaml
   namespace: worker-upload-img
