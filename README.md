@@ -6,7 +6,7 @@ Quais ações deverão ser executadas?
 
 - Remover a annotations do ingress `nginx.ingress.kubernetes.io/ssl-redirect`;
 
-- Atualizar a versão de todos Kustomization para `2.2.1`;
+- [x]  Atualizar a versão de todos Kustomization para `2.2.1`;
 
 - Remover linhas comentadas;
 
