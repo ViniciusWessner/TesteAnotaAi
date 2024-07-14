@@ -2,21 +2,21 @@
 
 Quais ações deverão ser executadas?
 
-- Remover a configuração `redis` e `redisConfig`;
+- [x] Remover a configuração `redis` e `redisConfig`;
 
-- Remover a annotations do ingress `nginx.ingress.kubernetes.io/ssl-redirect`;
+- [x] Remover a annotations do ingress `nginx.ingress.kubernetes.io/ssl-redirect`;
 
 - [x]  Atualizar a versão de todos Kustomization para `2.2.1`;
 
-- Remover linhas comentadas;
+- [x] Remover linhas comentadas;
 
 - Remover configurações duplicadas;
 
-- Deixar as configurações na mesma ordem;
+- [x] Deixar as configurações na mesma ordem;
 
-- Adicionar a env `ENV:dev`;
+- [x] Adicionar a env `ENV:dev`;
 
-- Alterar a configuração `containerPort:$PORT` para:
+- [x] Alterar a configuração `containerPort:$PORT` para:
 
 ```yml
 ports:
@@ -27,7 +27,7 @@ ports:
 
 - Caso uma configuração esteja com `enable: false` remover os demais campos dela;
 
-- Alterar o `requests` e `limits` de CPU para `10m` e `100m`, respectivamente.
+- [x] Alterar o `requests` e `limits` de CPU para `10m` e `100m`, respectivamente.
 
 # Orientações
 
