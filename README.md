@@ -6,9 +6,9 @@ Quais ações deverão ser executadas?
 
 - [x] Remover a annotations do ingress `nginx.ingress.kubernetes.io/ssl-redirect`;
 
-- Caso uma configuração esteja com `enable: false` remover os demais campos dela;
+- [ ] Caso uma configuração esteja com `enable: false` remover os demais campos dela;
 
-- Remover configurações duplicadas;
+- [ ] Remover configurações duplicadas;
 
 - [x] Remover linhas comentadas;
 
