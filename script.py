@@ -38,23 +38,6 @@ def removeAnnotation(arquivo_yaml):
     with open(arquivo_yaml, 'w') as file:
         yaml.dump(yamlData, file)
 
-# Função para atualizar a versão em arquivos Kustomization
-def updateVersionKustomization(arquivo_yaml, novaVersaoApp):
-    yaml = YAML()
-    yaml.preserve_quotes = True
-    yaml.allow_duplicate_keys = True
-
-    with open(arquivo_yaml, 'r') as file:
-        yamlData = yaml.load(file)
-
-        if 'helmCharts' in yamlData:
-            for chart in yamlData['helmCharts']:
-                if chart['name'] == 'app':
-                    chart['version'] = novaVersaoApp
-
-    with open(arquivo_yaml, 'w') as file:
-        yaml.dump(yamlData, file)
-
 # Função para remover comentários de linhas nos arquivos
 def removeLinesComments(arquivo_yaml):
     yaml = YAML()
@@ -74,6 +57,56 @@ def removeLinesComments(arquivo_yaml):
     with open(arquivo_yaml, 'w') as file:
         for line in new_lines:
             file.write(line)
+
+# Função para remover chaves duplicadas em arquivos YAML
+def removeDuplicateConfigurations(arquivo_yaml):
+    yaml = YAML()
+    yaml.preserve_quotes = True
+    yaml.allow_duplicate_keys = True
+
+    with open(arquivo_yaml, 'r') as file:
+        yaml_data = yaml.load(file)
+
+        def remove_duplicates(yaml_file):
+            if isinstance(yaml_file, dict):
+                key_count = defaultdict(int)
+                duplicate_keys = []
+
+                for key in list(yaml_file.keys()):
+                    key_count[key] += 1
+                    if key_count[key] > 1:
+                        duplicate_keys.append(key)
+
+                for key in duplicate_keys:
+                    del yaml_file[key]
+
+                for key, value in yaml_file.items():
+                    remove_duplicates(value)
+            elif isinstance(yaml_file, list):
+                for item in yaml_file:
+                    remove_duplicates(item)
+
+        remove_duplicates(yaml_data)
+
+    with open(arquivo_yaml, 'w') as file:
+        yaml.dump(yaml_data, file)
+
+# Função para atualizar a versão em arquivos Kustomization
+def updateVersionKustomization(arquivo_yaml, novaVersaoApp):
+    yaml = YAML()
+    yaml.preserve_quotes = True
+    yaml.allow_duplicate_keys = True
+
+    with open(arquivo_yaml, 'r') as file:
+        yamlData = yaml.load(file)
+
+        if 'helmCharts' in yamlData:
+            for chart in yamlData['helmCharts']:
+                if chart['name'] == 'app':
+                    chart['version'] = novaVersaoApp
+
+    with open(arquivo_yaml, 'w') as file:
+        yaml.dump(yamlData, file)
 
 # Função para adicionar um valor ao campo 'env' caso não exista
 def addEnv(arquivo_yaml):
@@ -124,39 +157,6 @@ def requestAndLimitCPU(arquivo_yaml):
     with open(arquivo_yaml, 'w') as file:
         yaml.dump(yamlData, file)
 
-# Função para remover chaves duplicadas em arquivos YAML
-def removeDuplicateConfigurations(arquivo_yaml):
-    yaml = YAML()
-    yaml.preserve_quotes = True
-    yaml.allow_duplicate_keys = True
-
-    with open(arquivo_yaml, 'r') as file:
-        yaml_data = yaml.load(file)
-
-        def remove_duplicates(yaml_file):
-            if isinstance(yaml_file, dict):
-                key_count = defaultdict(int)
-                duplicate_keys = []
-
-                for key in list(yaml_file.keys()):
-                    key_count[key] += 1
-                    if key_count[key] > 1:
-                        duplicate_keys.append(key)
-
-                for key in duplicate_keys:
-                    del yaml_file[key]
-
-                for key, value in yaml_file.items():
-                    remove_duplicates(value)
-            elif isinstance(yaml_file, list):
-                for item in yaml_file:
-                    remove_duplicates(item)
-
-        remove_duplicates(yaml_data)
-
-    with open(arquivo_yaml, 'w') as file:
-        yaml.dump(yaml_data, file)
-
 # Função principal para percorrer diretórios e aplicar todas as transformações
 def process_directory(root_dir):
     for root, dirs, files in os.walk(root_dir):
@@ -170,8 +170,8 @@ def process_directory(root_dir):
                 addEnv(file_path)
                 updateContainerPort(file_path)
                 requestAndLimitCPU(file_path)
-                updateVersionKustomization(file_path, '2.2.1')  # Define a versão aqui
+                updateVersionKustomization(file_path, novaVersaoApp) 
 
 if __name__ == "__main__":
-    applications_path = "/"  # Substitua pelo caminho correto da sua pasta 'applications'
+    applications_path = "/home/anotaai/Área de trabalho/TesteAnotaAi/applications" 
     process_directory(applications_path)

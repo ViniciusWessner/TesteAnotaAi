@@ -8,7 +8,7 @@ Quais ações deverão ser executadas?
 
 - [ ] Caso uma configuração esteja com `enable: false` remover os demais campos dela;
 
-- [ ] Remover configurações duplicadas;
+- [x] Remover configurações duplicadas;
 
 - [x] Remover linhas comentadas;
 
