@@ -1,12 +1,12 @@
 import re
 from ruamel.yaml import YAML
 
-arquivo_yaml = '/home/anotaai/Área de trabalho/aquiteste/applications/teste1.yaml'
+arquivo_yaml = ''
 
 def removeLinesComments(arquivo_yaml):
     yaml = YAML()
     yaml.preserve_quotes = True
-    yaml.allow_duplicate_keys = True #ignora duplicidade
+    yaml.allow_duplicate_keys = True 
 
     new_lines = []
 

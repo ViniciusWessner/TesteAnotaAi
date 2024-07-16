@@ -1,13 +1,12 @@
 from ruamel.yaml import YAML
 
-arquivo_yaml = '/home/anotaai/Área de trabalho/aquiteste/applications/teste1.yaml'
+arquivo_yaml = ''
 
 def removeAnnotation(arquivo_yaml):
     yaml = YAML()
     yaml.preserve_quotes = True
-    yaml.allow_duplicate_keys = True #ignora duplicidade
+    yaml.allow_duplicate_keys = True 
 
-    # Chamando o arquivo
     with open(arquivo_yaml, 'r') as file:
         yamlData = yaml.load(file) 
         print(f"como estava o arquivo /n {yamlData}")

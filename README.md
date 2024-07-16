@@ -6,11 +6,13 @@ Quais ações deverão ser executadas?
 
 - [x] Remover a annotations do ingress `nginx.ingress.kubernetes.io/ssl-redirect`;
 
-- [x]  Atualizar a versão de todos Kustomization para `2.2.1`;
+- Caso uma configuração esteja com `enable: false` remover os demais campos dela;
+
+- Remover configurações duplicadas;
 
 - [x] Remover linhas comentadas;
 
-- Remover configurações duplicadas;
+- [x] Atualizar a versão de todos Kustomization para `2.2.1`;
 
 - [x] Deixar as configurações na mesma ordem;
 
@@ -24,8 +26,6 @@ ports:
     containerPort: $PORT
     protocol: TCP
 ```
-
-- Caso uma configuração esteja com `enable: false` remover os demais campos dela;
 
 - [x] Alterar o `requests` e `limits` de CPU para `10m` e `100m`, respectivamente.
 

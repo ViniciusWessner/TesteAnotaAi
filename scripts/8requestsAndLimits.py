@@ -1,6 +1,6 @@
 from ruamel.yaml import YAML
 
-arquivo_yaml = '/home/anotaai/Área de trabalho/aquiteste/applications/teste1.yaml'
+arquivo_yaml = ''
 
 def requestAndLimitCPU(arquivo_yaml):
     yaml = YAML()
