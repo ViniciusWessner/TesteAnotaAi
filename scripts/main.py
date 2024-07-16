@@ -5,7 +5,6 @@ from collections import defaultdict
 
 novaVersaoApp = '2.2.1'
 
-# Função para remover configurações relacionadas ao Redis
 def removeRedisConfig(arquivo_yaml):
     yaml = YAML()
     yaml.preserve_quotes = True
@@ -16,13 +15,14 @@ def removeRedisConfig(arquivo_yaml):
 
         if 'redis' in yamlData:
             del yamlData['redis']
+            print("Removendo Redis")
         if 'redisConfig' in yamlData:
             del yamlData['redisConfig']
+            print("Removendo Redisconfig")
 
     with open(arquivo_yaml, 'w') as file:
         yaml.dump(yamlData, file)
 
-# Função para remover anotações do ingress
 def removeAnnotation(arquivo_yaml):
     yaml = YAML()
     yaml.preserve_quotes = True
@@ -34,11 +34,11 @@ def removeAnnotation(arquivo_yaml):
         if 'ingress' in yamlData and 'annotations' in yamlData['ingress']:
             if 'nginx.ingress.kubernetes.io/ssl-redirect' in yamlData['ingress']['annotations']:
                 del yamlData['ingress']['annotations']['nginx.ingress.kubernetes.io/ssl-redirect']
+                print("Removendo Annotation")
 
     with open(arquivo_yaml, 'w') as file:
         yaml.dump(yamlData, file)
 
-# Função para remover comentários de linhas nos arquivos
 def removeLinesComments(arquivo_yaml):
     yaml = YAML()
     yaml.preserve_quotes = True
@@ -53,12 +53,12 @@ def removeLinesComments(arquivo_yaml):
             removeComments = re.sub(r'#.*$', '', line)
             if removeComments:
                 new_lines.append(removeComments)
+                print("Removendo Linhas comentadas")
 
     with open(arquivo_yaml, 'w') as file:
         for line in new_lines:
             file.write(line)
 
-# Função para remover chaves duplicadas em arquivos YAML
 def removeDuplicateConfigurations(arquivo_yaml):
     yaml = YAML()
     yaml.preserve_quotes = True
@@ -79,9 +79,11 @@ def removeDuplicateConfigurations(arquivo_yaml):
 
                 for key in duplicate_keys:
                     del yaml_file[key]
+                    
 
                 for key, value in yaml_file.items():
                     remove_duplicates(value)
+                    print("Removendo keys duplicadas")
             elif isinstance(yaml_file, list):
                 for item in yaml_file:
                     remove_duplicates(item)
@@ -91,7 +93,6 @@ def removeDuplicateConfigurations(arquivo_yaml):
     with open(arquivo_yaml, 'w') as file:
         yaml.dump(yaml_data, file)
 
-# Função para atualizar a versão em arquivos Kustomization
 def updateVersionKustomization(arquivo_yaml, novaVersaoApp):
     yaml = YAML()
     yaml.preserve_quotes = True
@@ -104,11 +105,11 @@ def updateVersionKustomization(arquivo_yaml, novaVersaoApp):
             for chart in yamlData['helmCharts']:
                 if chart['name'] == 'app':
                     chart['version'] = novaVersaoApp
+                    print("Atualizando versão para 2.2.1")
 
     with open(arquivo_yaml, 'w') as file:
         yaml.dump(yamlData, file)
 
-# Função para adicionar um valor ao campo 'env' caso não exista
 def addEnv(arquivo_yaml):
     yaml = YAML()
     yaml.preserve_quotes = True
@@ -119,11 +120,11 @@ def addEnv(arquivo_yaml):
 
         if 'env' not in yamlData or yamlData['env'] == 'null' or yamlData['env'] is None:
             yamlData['env'] = 'dev'
+            print("Adicionando Env")
 
     with open(arquivo_yaml, 'w') as file:
         yaml.dump(yamlData, file)
 
-# Função para atualizar o 'containerPort' em arquivos YAML
 def updateContainerPort(arquivo_yaml):
     yaml = YAML()
     yaml.preserve_quotes = True
@@ -136,12 +137,12 @@ def updateContainerPort(arquivo_yaml):
             for ports in yamlData['ports']:
                 if ports['name'] == 'http':
                     ports['containerPort'] = '$PORT'
+                    print("atualizando Container port")
                     break
 
     with open(arquivo_yaml, 'w') as file:
         yaml.dump(yamlData, file)
 
-# Função para configurar requests e limits de CPU
 def requestAndLimitCPU(arquivo_yaml):
     yaml = YAML()
     yaml.preserve_quotes = True
@@ -153,12 +154,12 @@ def requestAndLimitCPU(arquivo_yaml):
         if 'resources' in yamlData and 'limits' in yamlData['resources']:
             yamlData['resources']['limits']['cpu'] = '10m'
             yamlData['resources']['requests']['cpu'] = '100m'
+            print("Alterando CPU")
 
     with open(arquivo_yaml, 'w') as file:
         yaml.dump(yamlData, file)
 
-# Função principal para percorrer diretórios e aplicar todas as transformações
-def process_directory(root_dir):
+def processandoDiretorio(root_dir):
     for root, dirs, files in os.walk(root_dir):
         for file in files:
             if file.endswith('.yaml'):
@@ -171,7 +172,18 @@ def process_directory(root_dir):
                 updateContainerPort(file_path)
                 requestAndLimitCPU(file_path)
                 updateVersionKustomization(file_path, novaVersaoApp) 
+                
+def kustomization(root_dir):
+    for root, dirs, files in os.walk(root_dir):
+        for file in files:
+            if file.endswith('.kustomization'):
+                file_path = os.path.join(root, file)
+                updateVersionKustomization(file_path, novaVersaoApp) 
+                addEnv(file_path)
+
+
 
 if __name__ == "__main__":
-    applications_path = "/home/anotaai/Área de trabalho/TesteAnotaAi/applications" 
-    process_directory(applications_path)
+    applications_path = "../applications" 
+    processandoDiretorio(applications_path)
+    kustomization(applications_path)
