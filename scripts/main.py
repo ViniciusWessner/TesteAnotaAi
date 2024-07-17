@@ -53,7 +53,6 @@ def removeLinesComments(arquivo_yaml):
             removeComments = re.sub(r'#.*$', '', line)
             if removeComments:
                 new_lines.append(removeComments)
-                print("Removendo Linhas comentadas")
 
     with open(arquivo_yaml, 'w') as file:
         for line in new_lines:
@@ -83,7 +82,6 @@ def removeDuplicateConfigurations(arquivo_yaml):
 
                 for key, value in yaml_file.items():
                     remove_duplicates(value)
-                    print("Removendo keys duplicadas")
             elif isinstance(yaml_file, list):
                 for item in yaml_file:
                     remove_duplicates(item)
@@ -159,7 +157,7 @@ def requestAndLimitCPU(arquivo_yaml):
     with open(arquivo_yaml, 'w') as file:
         yaml.dump(yamlData, file)
 
-def processandoDiretorio(root_dir):
+def percorreDiretorios(root_dir):
     for root, dirs, files in os.walk(root_dir):
         for file in files:
             if file.endswith('.yaml'):
@@ -168,22 +166,13 @@ def processandoDiretorio(root_dir):
                 removeAnnotation(file_path)
                 removeDuplicateConfigurations(file_path)
                 removeLinesComments(file_path)
-                addEnv(file_path)
+                if file == 'values.yaml':
+                    addEnv(file_path)
                 updateContainerPort(file_path)
                 requestAndLimitCPU(file_path)
-                updateVersionKustomization(file_path, novaVersaoApp) 
-                
-def kustomization(root_dir):
-    for root, dirs, files in os.walk(root_dir):
-        for file in files:
-            if file.endswith('.kustomization'):
-                file_path = os.path.join(root, file)
-                updateVersionKustomization(file_path, novaVersaoApp) 
-                addEnv(file_path)
-
-
+                if file == 'kustomization.yaml':
+                    updateVersionKustomization(file_path, novaVersaoApp)
 
 if __name__ == "__main__":
-    applications_path = "../applications" 
-    processandoDiretorio(applications_path)
-    kustomization(applications_path)
+    diretosioRaiz = "../applications" 
+    percorreDiretorios(diretosioRaiz)

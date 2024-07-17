@@ -5,7 +5,7 @@ arquivo_yaml = ''
 def requestAndLimitCPU(arquivo_yaml):
     yaml = YAML()
     yaml.preserve_quotes = True
-    yaml.allow_duplicate_keys = True #ignora duplicidade
+    yaml.allow_duplicate_keys = True 
 
     with open(arquivo_yaml, 'r') as file:
         yamlData = yaml.load(file)
